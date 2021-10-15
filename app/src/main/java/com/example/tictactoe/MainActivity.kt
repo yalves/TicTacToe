@@ -5,9 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import com.example.tictactoe.databinding.ActivityMainBinding
+import com.example.tictactoe.databinding.FragmentGameBinding
+import com.example.tictactoe.databinding.FragmentScoreBinding
+import android.R
 
-class MainActivity : AppCompatActivity() {
+
+
+
+class MainActivity : FragmentActivity() {
 
     enum class Turn {
         NOUGHT,
@@ -22,11 +29,15 @@ class MainActivity : AppCompatActivity() {
 
     private var boardList = mutableListOf<Button>()
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: FragmentGameBinding
+    private lateinit var score: FragmentScoreBinding
+    private lateinit var main: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = FragmentGameBinding.inflate(layoutInflater)
+        main = ActivityMainBinding.inflate(layoutInflater)
+        score = FragmentScoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initBoard()
     }

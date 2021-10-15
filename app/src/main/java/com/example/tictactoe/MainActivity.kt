@@ -10,8 +10,8 @@ import com.example.tictactoe.databinding.ActivityMainBinding
 import com.example.tictactoe.databinding.FragmentGameBinding
 import com.example.tictactoe.databinding.FragmentScoreBinding
 import android.R
-
-
+import android.content.Intent
+import android.net.Uri
 
 
 class MainActivity : FragmentActivity() {
@@ -111,8 +111,25 @@ class MainActivity : FragmentActivity() {
                 _,_ ->
                 resetBoard()
             }
+            .setNegativeButton("Send e-mail") {
+                    _,_ ->
+                sendEmail()
+            }
             .setCancelable(false)
             .show()
+    }
+
+    private fun sendEmail() {
+        val intent = Intent(
+            Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "", null
+            )
+        )
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Tic tac toe!");
+        intent.putExtra(Intent.EXTRA_TEXT, "I've won");
+
+        startActivity(intent)
+        resetBoard()
     }
 
     private fun resetBoard() {

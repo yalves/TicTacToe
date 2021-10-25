@@ -12,6 +12,8 @@ import com.example.tictactoe.databinding.FragmentScoreBinding
 import android.R
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 
 
 class MainActivity : FragmentActivity() {
@@ -22,7 +24,11 @@ class MainActivity : FragmentActivity() {
     }
 
     private var firstTurn = Turn.CROSS
-    private var currentTurn = Turn.CROSS
+    //private MutableLiveData<String> currentTurn = Turn.CROSS
+
+    val currentTurn: MutableLiveData<Turn> by lazy {
+        MutableLiveData<Turn>()
+    }
 
     private var noughtsScore = 0
     private var crossesScore = 0
@@ -35,10 +41,26 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = FragmentGameBinding.inflate(layoutInflater)
         main = ActivityMainBinding.inflate(layoutInflater)
         score = FragmentScoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val nameObserver = Observer<Turn> { newName ->
+            // Update the UI, in this case, a TextView.
+            var turnText = ""
+            if (currentTurn.value == Turn.CROSS)
+                turnText = "Turn $CROSS"
+            else if (currentTurn.value == Turn.NOUGHT)
+                turnText = "Turn $NOUGHT"
+
+            binding.turnTV.text = turnText
+        }
+
+        currentTurn.observe(this, nameObserver);
+        currentTurn.value = Turn.CROSS;
+
         initBoard()
     }
 
@@ -142,7 +164,7 @@ class MainActivity : FragmentActivity() {
         else if (firstTurn == Turn.CROSS)
             firstTurn = Turn.NOUGHT
 
-        currentTurn = firstTurn
+        currentTurn.value = firstTurn
         setTurnLabel()
     }
 
@@ -158,22 +180,22 @@ class MainActivity : FragmentActivity() {
         if (button.text != "")
             return
 
-        if (currentTurn == Turn.NOUGHT) {
+        if (currentTurn.value == Turn.NOUGHT) {
             button.text = NOUGHT
-            currentTurn = Turn.CROSS
+            currentTurn.value = Turn.CROSS
         }
-        else if (currentTurn == Turn.CROSS) {
+        else if (currentTurn.value == Turn.CROSS) {
             button.text = CROSS
-            currentTurn = Turn.NOUGHT
+            currentTurn.value = Turn.NOUGHT
         }
         setTurnLabel()
     }
 
     private fun setTurnLabel() {
         var turnText = ""
-        if (currentTurn == Turn.CROSS)
+        if (currentTurn.value == Turn.CROSS)
             turnText = "Turn $CROSS"
-        else if (currentTurn == Turn.NOUGHT)
+        else if (currentTurn.value == Turn.NOUGHT)
             turnText = "Turn $NOUGHT"
 
         binding.turnTV.text = turnText
